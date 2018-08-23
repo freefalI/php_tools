@@ -2,44 +2,68 @@
 // spl_autoload_register();
 error_reporting(E_ALL); 
 require("config.php");
-require_once("core/Singleton.php");
-require_once("core/database/pdoWrapper.php");
-require_once("core/builder/SQL.php");
-require_once("core/builder/QueryFormer.php");
+require_once("core/Model.php");
+require_once("core/Database.php");
+require_once("core/SQL.php");
 Database::connect();
 
+// Database class test
+// Database::connect();
+// $a = Database::query('insert into goods (name,price) values ( :nm, :pr)',[':nm'=>'shoes',':pr'=>50],true);print_r($a);
+// $a = Database::query('insert into goods (name,price) values ( :nm, :pr)',['nm'=>'shoes','pr'=>50],true);print_r($a);
+// $a = Database::query('insert into goods (name,price) values ( ?, ?)',['shoes',50],true);print_r($a);
+
+// $a = Database::query('update goods set price = 100 where id = :id',[':id'=>2],true);print_r($a);
+// $a = Database::query('select * from goods where id = :id',[':id'=>2],true);print_r($a);
+// $a = Database::query('delete from goods where id = :id',[':id'=>2],true);print_r($a);
 
 
-// print_r(dsql("select * from table1 where id = :hi or name = :nm",[":hi"=>2,":nm"=>"hello1"]));
-// print_r(dsql("select * from table1 where id = ? or name = ?",[2,"hello1"]));
-// print_r(dsql("select * from table1 where id = ? or name = ?",2,"hello1"));
+// SQL class test
+
+// $q = SQL::table('goods')->insert(['id'=>20,'name'=>'jeans','price'=>200]);print_r($q);
+// $q = SQL::table('goods')->insertGetId(['name'=>"adidas",'price'=>120]);print_r( $q);
+
+// $q = SQL::table('goods')->where('name = adidas')->update(['price'=>200]);print_r($q);
+
+// $q = SQL::table('goods')->where('id > 5')->delete();print_r($q);
+
+// $q = SQL::table('goods')->where('price > 30 and price < 300')->get();print_r( $q);
+// $q = SQL::table('goods')->where('price > 30 and price < 300')->first();print_r( $q);
+// $q = SQL::table('goods')->where('price > 30 and price < 300')->select('name','price');print_r( $q);
+
+// $q = SQL::table('goods')->join('sells','goods.id = sells.id')->get();print_r( $q);
+
+// $q = SQL::table('goods')->
+//     // join('sells','goods.id = sells.id')->
+//     where("price > 30 and price < 300")->
+//     orderBy('price','desc')->
+//     orderBy('name')->
+//     offset(3)-> 
+//     limit(2)-> 
+//     select('name','price');
+// print_r($q);
 
 
 
-$arr = SQL::table('weather')->
-    select()->
-    //setValues("weather.date","weather.pressure","weather.temperature")->
-    //join(['temperature_table'=>'weather.date=temperature_table.date','another_table'=>'weather.pressure=another_table.pressure'])->
-    where("weather.pressure >= 650 and weather.temperature = hello")->
-    //orderBy('weather.pressure desc')->
-    //limit(2)->
-    execute();
-/*
-$arr = SQL::table('weather')->update()->
-    setValues(['temperature' => 1111])->
-    where("pressure = 746")->
-    execute();
 
-$arr = SQL::table('weather')->insert()->
-    setValues([
-        'day' => '2023-03-02',
-        'temperature' => 111,
-        'pressure' => 746,
-        'humidity' => 73,
-        'precipitation' => 'Сильний сніг'])->
-    execute();
+// Model class test
 
-$arr = SQL::table('weather')->delete()->
-    where("temperature = 111")->
-    execute();
-*/
+class Product extends Model
+{
+    protected $table ='goods';
+}
+// $q = Product::find(55);
+// $q = Product::find([53,54,55]);
+// $q = Product::all();
+// $q = Product::where("id = 55")->get();
+
+// $q = Product::find(55);
+// $q->price = 200;
+// $q->save();
+// $q->delete();
+
+// Product::destroy(51);
+
+
+// $q =Product::create(['price'=>500,'name'=>'nike']);
+// print_r($q);
